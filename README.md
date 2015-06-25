@@ -16,4 +16,4 @@ A rubber indicator for ViewPager
 
 ```
 MIT
-``
+```

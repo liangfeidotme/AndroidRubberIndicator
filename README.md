@@ -9,7 +9,7 @@ A rubber indicator for ViewPager
 
 # Me
 
-* [weibo](weibo.com/liangfeizc)
+* [weibo](http://weibo.com/liangfeizc)
 * [twitter](https://twitter.com/liangfeizc)
 
 # License

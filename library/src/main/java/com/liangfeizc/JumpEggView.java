@@ -12,7 +12,8 @@ import android.view.View;
  * Created by liangfeizc on 6/26/15.
  */
 public class JumpEggView extends View {
-    private Paint mPaint;
+    private Paint mInnerCirclePaint;
+    private Paint mOuterCirclePaint;
 
     public JumpEggView(Context context) {
         super(context);
@@ -36,15 +37,21 @@ public class JumpEggView extends View {
     }
 
     private void init() {
-        mPaint = new Paint();
-        mPaint.setColor(0xFFAF3854);
-        mPaint.setStrokeWidth(1);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mInnerCirclePaint = new Paint();
+        mInnerCirclePaint.setColor(0xFFAF3854);
+        mInnerCirclePaint.setStrokeWidth(1);
+        mInnerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        mOuterCirclePaint = new Paint();
+        mOuterCirclePaint.setColor(0xFF533456);
+        mOuterCirclePaint.setStrokeWidth(1);
+        mOuterCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, Math.min(getWidth(), getHeight()) / 2, mPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, Math.min(getWidth(), getHeight()) / 2, mOuterCirclePaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, Math.min(getWidth(), getHeight()) / 2 - 50, mInnerCirclePaint);
     }
 }

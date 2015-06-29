@@ -1,4 +1,4 @@
-# RubberIndicator
+# RubberIndicator [Developing]
 
 A rubber indicator for ViewPager
 

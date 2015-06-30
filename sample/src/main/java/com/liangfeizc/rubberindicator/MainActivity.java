@@ -37,5 +37,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveCircle() {
+        mRubberIndicator.next();
     }
 }

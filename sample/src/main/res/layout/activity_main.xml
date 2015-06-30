@@ -4,6 +4,7 @@
 
     <com.liangfeizc.RubberIndicator
         android:id="@+id/rubber"
+        android:layout_marginBottom="20dp"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="100dp" />

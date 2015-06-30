@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRubberIndicator = (RubberIndicator) findViewById(R.id.rubber);
-        mRubberIndicator.setNumber(7);
+        mRubberIndicator.setCount(8);
     }
 
     @Override
@@ -37,6 +37,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveCircle() {
-        mRubberIndicator.startMoving();
     }
 }

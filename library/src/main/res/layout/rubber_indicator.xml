@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.liangfeizc.CircleView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cv_color="@color/background" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/indicator_background"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.liangfeizc.CircleView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/largeCircle" />
+
+        <com.liangfeizc.CircleView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/smallCircle" />
+
+        <com.liangfeizc.CircleView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/smallCircle" />
+
+        <com.liangfeizc.CircleView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/smallCircle" />
+
+        <com.liangfeizc.CircleView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/smallCircle" />
+
+        <com.liangfeizc.CircleView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:cv_color="@color/smallCircle" />
+    </LinearLayout>
+</FrameLayout>

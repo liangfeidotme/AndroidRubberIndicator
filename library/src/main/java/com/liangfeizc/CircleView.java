@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,8 +17,11 @@ import android.view.View;
  */
 public class CircleView extends View {
     private static final int DEFAULT_COLOR = Color.BLACK;
+
     private Paint mPaint;
     private int mColor;
+    private float mRadius;
+    private PointF mCenterPoint = new PointF();
 
     public CircleView(Context context) {
         this(context, null);
@@ -54,16 +58,28 @@ public class CircleView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+
+        mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
+        mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, Math.min(getWidth(), getHeight()) / 2, mPaint);
+        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius, mPaint);
     }
 
     public void setColor(final int colorValue) {
-        mColor = colorValue;
+        mPaint.setColor(colorValue);
         invalidate();
+    }
+
+    public void setRadius(float radius) {
+        mRadius = radius;
+        invalidate();
+    }
+
+    public float getRadius() {
+        return mRadius;
     }
 }

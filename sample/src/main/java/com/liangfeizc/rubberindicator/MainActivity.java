@@ -1,29 +1,21 @@
 package com.liangfeizc.rubberindicator;
 
-import android.graphics.Point;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.liangfeizc.CircleView;
+import com.liangfeizc.RubberIndicator;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-    private CircleView mPreviousView;
-    private CircleView mIndicatorView;
-    private CircleView mOuterView;
+    private RubberIndicator mRubberIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mPreviousView = (CircleView) findViewById(R.id.previous_circle);
-        mIndicatorView = (CircleView) findViewById(R.id.indicator_circle);
-        mOuterView = (CircleView) findViewById(R.id.outer_circle);
+        mRubberIndicator = (RubberIndicator) findViewById(R.id.rubber);
+        mRubberIndicator.setNumber(7);
     }
 
     @Override
@@ -38,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_move: {
                 moveCircle();
+                break;
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void moveCircle() {
+        mRubberIndicator.startMoving();
     }
 }

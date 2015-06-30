@@ -1,10 +1,13 @@
 package com.liangfeizc;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -60,9 +63,35 @@ public class RubberIndicator extends LinearLayout {
         float newLeftX = midX * 2 - rightX;
         float newRightX = midX * 2 - (leftX + mLargeCircle.getWidth());
 
-        mLargeCircle.setX(newRightX);
-        mSmallCircle.setX(newLeftX);
+        //mLargeCircle.setX(newRightX);
+        //mSmallCircle.setX(newLeftX);
+        //animateSmallCircle(0, newLeftX);
 
-        mOuterCircle.setX(mOuterCircle.getX() + mLargeCircle.getX() - leftX);
+        //mOuterCircle.setX(mOuterCircle.getX() + mLargeCircle.getX() - leftX);
+
+        createAnimator(newLeftX, newRightX, mOuterCircle.getX() + newRightX - leftX);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void createAnimator(float smallCircleX, float largeCircleX, float outerCircleX) {
+        float radius = mSmallCircle.getRadius();
+
+        ObjectAnimator radiusDecreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius - 5);
+        ObjectAnimator radiusIncreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius);
+
+        radiusDecreaseAnim.setDuration(150);
+        radiusIncreaseAnim.setDuration(150);
+
+        AnimatorSet radiusAnim = new AnimatorSet();
+        radiusAnim.playSequentially(radiusDecreaseAnim, radiusIncreaseAnim);
+
+        ObjectAnimator smallCircleAnim = ObjectAnimator.ofFloat(mSmallCircle, "x", smallCircleX);
+        ObjectAnimator largeCircleAnim = ObjectAnimator.ofFloat(mLargeCircle, "x", largeCircleX);
+        ObjectAnimator outerCircleAnim = ObjectAnimator.ofFloat(mOuterCircle, "x", outerCircleX);
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.setInterpolator(new BounceInterpolator());
+        animSet.playTogether(smallCircleAnim, largeCircleAnim, outerCircleAnim, radiusAnim);
+        animSet.start();
     }
 }

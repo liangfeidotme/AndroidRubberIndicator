@@ -1,14 +1,11 @@
 package com.liangfeizc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 

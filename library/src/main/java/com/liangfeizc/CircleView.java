@@ -76,7 +76,16 @@ public class CircleView extends View {
         invalidate();
     }
 
+    public void setCenterPoint(PointF point) {
+        mCenterPoint = point;
+        invalidate();
+    }
+
     public float getRadius() {
         return mRadius;
+    }
+
+    public PointF getCenterPoint() {
+        return mCenterPoint;
     }
 }

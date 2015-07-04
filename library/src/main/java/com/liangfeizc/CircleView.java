@@ -15,10 +15,10 @@ import android.view.View;
 public class CircleView extends View {
     private static final int DEFAULT_COLOR = Color.BLACK;
 
-    private Paint mPaint;
     private int mColor;
     private float mRadius;
-    private PointF mCenterPoint = new PointF();
+    private Paint mPaint;
+    private PointF mCenterPoint;
 
     public CircleView(Context context) {
         this(context, null);
@@ -48,16 +48,11 @@ public class CircleView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
-        mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
+        //mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
+        //mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
     }
 
     @Override

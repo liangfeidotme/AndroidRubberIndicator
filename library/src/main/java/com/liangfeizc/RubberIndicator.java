@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -63,35 +64,35 @@ public class RubberIndicator extends LinearLayout {
         float largeCircleX = mSmallCircle.getX() + mSmallCircle.getWidth() - mLargeCircle.getWidth();
         float outerCircleX = mOuterCircle.getX() + largeCircleX - mLargeCircle.getX();
 
-        float radius = mLargeCircle.getRadius();
-        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("x", largeCircleX);
-        PropertyValuesHolder pvhRadius = PropertyValuesHolder.ofFloat("radius", radius, radius - 10, radius);
-        ObjectAnimator largeCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mLargeCircle, pvhX, pvhRadius);
+        PropertyValuesHolder pvhScaleX = PropertyValuesHolder.ofFloat("scaleX", 1, 0.8f, 1);
+        PropertyValuesHolder pvhScaleY = PropertyValuesHolder.ofFloat("scaleY", 1, 0.8f, 1);
 
-        radius = mOuterCircle.getRadius();
+        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("x", largeCircleX);
+        ObjectAnimator largeCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mLargeCircle, pvhX, pvhScaleX, pvhScaleY);
+
         pvhX = PropertyValuesHolder.ofFloat("x", outerCircleX);
-        pvhRadius = PropertyValuesHolder.ofFloat("radius", radius, radius - 10, radius);
-        ObjectAnimator outerCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mOuterCircle, pvhX, pvhRadius);
+        ObjectAnimator outerCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mOuterCircle, pvhX, pvhScaleX, pvhScaleY);
 
 
         PointF smallCircleCenter = mSmallCircle.getCenter();
         PointF smallCircleEndCenter = new PointF(
                 smallCircleCenter.x - (mSmallCircle.getX() - smallCircleX), smallCircleCenter.y);
-        radius = (smallCircleCenter.x - smallCircleEndCenter.x) / 2;
+        float radius = (smallCircleCenter.x - smallCircleEndCenter.x) / 2;
         RectF oval = new RectF(smallCircleEndCenter.x, smallCircleEndCenter.y - radius,
                 smallCircleCenter.x, smallCircleEndCenter.y + radius);
         Path motionPath = new Path();
         motionPath.arcTo(oval, 0, 180);
         ObjectAnimator smallCircleAnim = ObjectAnimator.ofObject(mSmallCircle, "center", null, motionPath);
+        smallCircleAnim.setInterpolator(new BounceInterpolator());
 
         PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofFloat("rotation", 0, -30f, 0, 30f, 0);
         PropertyValuesHolder pvhScale = PropertyValuesHolder.ofFloat("scaleY", 1, 0.5f, 1);
         ObjectAnimator otherAnim = ObjectAnimator.ofPropertyValuesHolder(mSmallCircle, pvhRotation, pvhScale);
-
+        otherAnim.setInterpolator(new BounceInterpolator());
 
         mAnim.play(smallCircleAnim).with(otherAnim)
                 .with(largeCircleAnim).with(outerCircleAnim);
-        mAnim.setDuration(1000);
+        mAnim.setDuration(500);
         mAnim.start();
     }
 

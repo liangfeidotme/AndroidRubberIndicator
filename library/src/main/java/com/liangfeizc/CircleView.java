@@ -98,7 +98,7 @@ public class CircleView extends View {
         setY(location.mY - mRadius);
     }
 
-    public PointF getLocation() {
-        return new PointF(getX() + mRadius, getY() + mRadius);
+    public PathPoint getLocation() {
+        return new PathPoint(PathPoint.LINE, getX() + mRadius, getY() + mRadius);
     }
 }

@@ -85,22 +85,30 @@ public class RubberIndicator extends LinearLayout {
         ObjectAnimator radiusDecreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius - 5);
         ObjectAnimator radiusIncreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius);
 
-        radiusDecreaseAnim.setDuration(150);
-        radiusIncreaseAnim.setDuration(150);
+        radiusDecreaseAnim.setDuration(1500);
+        radiusIncreaseAnim.setDuration(1500);
 
         AnimatorSet radiusAnim = new AnimatorSet();
         radiusAnim.playSequentially(radiusDecreaseAnim, radiusIncreaseAnim);
+        radiusAnim.setDuration(3000);
 
         /** line motion */
         ObjectAnimator smallCircleAnim = ObjectAnimator.ofFloat(mSmallCircle, "x", smallCircleX);
         ObjectAnimator largeCircleAnim = ObjectAnimator.ofFloat(mLargeCircle, "x", largeCircleX);
         ObjectAnimator outerCircleAnim = ObjectAnimator.ofFloat(mOuterCircle, "x", outerCircleX);
 
+        smallCircleAnim.setDuration(3000);
+        largeCircleAnim.setDuration(3000);
+        outerCircleAnim.setDuration(3000);
+
         /** arc motion **/
-        PointF startLocation = mSmallCircle.getLocation();
-        PointF endLocation = new PointF(startLocation.x - (mSmallCircle.getX() - smallCircleX),
-                startLocation.y);
+        PathPoint pathPoint = mSmallCircle.getLocation();
+
+        PointF startLocation = new PointF(pathPoint.mX, pathPoint.mY);
+        PointF endLocation = new PointF(startLocation.x - (mSmallCircle.getX() - smallCircleX), startLocation.y);
+
         Animator  arcAnim = createArcMotion(startLocation, endLocation);
+        arcAnim.setDuration(3000);
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.setInterpolator(new BounceInterpolator());
@@ -118,7 +126,6 @@ public class RubberIndicator extends LinearLayout {
 
         ObjectAnimator anim = ObjectAnimator.ofObject(mSmallCircle, "location",
                 new PathEvaluator(), path.getPoints().toArray());
-        anim.setDuration(300);
 
         return anim;
     }

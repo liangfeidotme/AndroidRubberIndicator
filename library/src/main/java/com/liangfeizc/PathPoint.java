@@ -1,5 +1,10 @@
 package com.liangfeizc;
 
+import android.graphics.Path;
+import android.graphics.PathMeasure;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
 /**
  * Created by liangfeizc on 7/4/15.
  */
@@ -36,6 +41,11 @@ public class PathPoint {
     int mOperation;
 
     /**
+     *  The rect and angles for oval motion.
+     */
+    PathMeasure mArcPathMeasure;
+
+    /**
      * Line/Move constructor
      */
     public PathPoint(int operation, float x, float y) {
@@ -55,6 +65,16 @@ public class PathPoint {
         mX = x;
         mY = y;
         mOperation = CURVE;
+    }
+
+    /**
+     * Arc constructor
+     */
+    public PathPoint(RectF oval, float startAngle, float sweepAngle) {
+        mOperation = ARC;
+        Path path = new Path();
+        path.arcTo(oval, startAngle, sweepAngle);
+        mArcPathMeasure = new PathMeasure(path, false);
     }
 
     /**
@@ -78,5 +98,21 @@ public class PathPoint {
      */
     public static PathPoint moveTo(float x, float y) {
         return new PathPoint(MOVE, x, y);
+    }
+
+    /**
+     * Constructs and returns a PathPoint object that describes an arc.
+     */
+    public static PathPoint arcTo(RectF oval, float startAngle, float sweepAngle) {
+        return new PathPoint(oval, startAngle, sweepAngle);
+    }
+
+    public PointF getArcPoint(float fraction) {
+        if (mOperation != ARC) {
+            throw new IllegalStateException("operation must be ARC");
+        }
+        float[] aCoordinates = {0, 0};
+        mArcPathMeasure.getPosTan(mArcPathMeasure.getLength() * fraction, aCoordinates, null);
+        return new PointF(aCoordinates[0], aCoordinates[1]);
     }
 }

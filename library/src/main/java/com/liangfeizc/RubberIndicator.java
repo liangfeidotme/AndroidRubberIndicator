@@ -1,15 +1,12 @@
 package com.liangfeizc;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
-import android.animation.PointFEvaluator;
-import android.animation.TypeEvaluator;
-import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,6 +30,8 @@ public class RubberIndicator extends LinearLayout {
     private CircleView mSmallCircle;
     private CircleView mOuterCircle;
 
+    private AnimatorSet mAnim;
+
     public RubberIndicator(Context context) {
         super(context);
         init();
@@ -54,6 +53,9 @@ public class RubberIndicator extends LinearLayout {
         mLargeCircle = (CircleView) rootView.findViewById(R.id.large_circle);
         mSmallCircle = (CircleView) rootView.findViewById(R.id.small_circle);
         mOuterCircle = (CircleView) rootView.findViewById(R.id.outer_circle);
+
+        mAnim = new AnimatorSet();
+
     }
 
     public void setCount(int count) {
@@ -76,27 +78,48 @@ public class RubberIndicator extends LinearLayout {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void animate(float smallCircleX, float largeCircleX, float outerCircleX) {
+    public void animate(float smallCircleX, float largeCircleX, float outerCircleX) {
+
+        /** radius animator */
         float radius = mSmallCircle.getRadius();
+        ObjectAnimator radiusDecreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius - 5);
+        ObjectAnimator radiusIncreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius);
 
-        ObjectAnimator radiusAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius - 5);
-        radiusAnim.setDuration(150).reverse();
+        radiusDecreaseAnim.setDuration(150);
+        radiusIncreaseAnim.setDuration(150);
 
+        AnimatorSet radiusAnim = new AnimatorSet();
+        radiusAnim.playSequentially(radiusDecreaseAnim, radiusIncreaseAnim);
+
+        /** line motion */
         ObjectAnimator smallCircleAnim = ObjectAnimator.ofFloat(mSmallCircle, "x", smallCircleX);
         ObjectAnimator largeCircleAnim = ObjectAnimator.ofFloat(mLargeCircle, "x", largeCircleX);
         ObjectAnimator outerCircleAnim = ObjectAnimator.ofFloat(mOuterCircle, "x", outerCircleX);
 
-        PointF startPoint = mSmallCircle.getCenterPoint();
-        PointF endPoint = new PointF(startPoint.x - (mSmallCircle.getX() - smallCircleX), startPoint.y);
-
-        PointF midPoint = new PointF((startPoint.x + endPoint.x) / 2, mSmallCircle.getY() + mSmallCircle.getRadius());
-
-        ValueAnimator moveDownAnimator = ValueAnimator.ofObject(new PointFEvaluator(), startPoint, midPoint);
-        ValueAnimator moveUpAnimator = ValueAnimator.ofObject(new PointFEvaluator(), midPoint, endPoint);
+        /** arc motion **/
+        PointF startLocation = mSmallCircle.getLocation();
+        PointF endLocation = new PointF(startLocation.x - (mSmallCircle.getX() - smallCircleX),
+                startLocation.y);
+        Animator  arcAnim = createArcMotion(startLocation, endLocation);
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.setInterpolator(new BounceInterpolator());
-        animSet.playTogether(largeCircleAnim, outerCircleAnim, radiusAnim, moveDownAnimator, moveUpAnimator);
+        animSet.playTogether(smallCircleAnim, largeCircleAnim, outerCircleAnim, radiusAnim, arcAnim);
         animSet.start();
+    }
+
+    public Animator createArcMotion(PointF startPoint, PointF endPoint) {
+        AnimatorPath path = new AnimatorPath();
+
+        float distance = (startPoint.x - endPoint.x) / 2;
+        RectF oval = new RectF(endPoint.x, endPoint.y - distance, startPoint.x, startPoint.y + distance);
+
+        path.arcTo(oval, 0, 180);
+
+        ObjectAnimator anim = ObjectAnimator.ofObject(mSmallCircle, "location",
+                new PathEvaluator(), path.getPoints().toArray());
+        anim.setDuration(300);
+
+        return anim;
     }
 }

@@ -1,6 +1,7 @@
 package com.liangfeizc;
 
 import android.animation.TypeEvaluator;
+import android.graphics.PointF;
 
 /**
  * Created by liangfeizc on 7/4/15.
@@ -29,6 +30,10 @@ public class PathEvaluator implements TypeEvaluator<PathPoint> {
         } else if (endValue.mOperation == PathPoint.LINE) {
             x = startValue.mX + t * (endValue.mX - startValue.mX);
             y = startValue.mY + t * (endValue.mY - startValue.mY);
+        } else if (endValue.mOperation == PathPoint.ARC) {
+            PointF point = endValue.getArcPoint(t);
+            x = point.x;
+            y = point.y;
         } else {
             x = endValue.mX;
             y = endValue.mY;

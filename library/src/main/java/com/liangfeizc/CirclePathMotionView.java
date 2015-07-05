@@ -1,8 +1,10 @@
 package com.liangfeizc;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,7 +17,10 @@ public class CirclePathMotionView extends FrameLayout {
 
     private PointF mStartPoint;
     private PointF mEndPoint;
-    private float mRadius = DEFAULT_RADIUS;
+    private CircleView mCircleView;
+    private AnimatorPath mPath;
+    private ObjectAnimator mAnimator;
+    private AnimatorSet mAnimatorSet;
 
     public CirclePathMotionView(Context context) {
         super(context);
@@ -33,14 +38,37 @@ public class CirclePathMotionView extends FrameLayout {
     }
 
     private void init() {
-        mStartPoint = new PointF(100, 100);
+        mStartPoint = new PointF(200, 100);
         mEndPoint = new PointF(600, 100);
 
-        addView(createCircleView(mStartPoint, mRadius));
-        addView(createCircleView(mEndPoint, mRadius));
+        mPath = new AnimatorPath();
+        //mPath.moveTo(mStartPoint.x, mEndPoint.y);
 
-        Path path = new Path();
-        path.moveTo(mStartPoint.x, mStartPoint.y);
+        RectF oval = new RectF(mStartPoint.x, mStartPoint.y - 200, mEndPoint.x, mEndPoint.y + 200);
+        mPath.arcTo(oval, -180, -180);
+
+        //mPath.lineTo(mEndPoint.x, mEndPoint.y);
+
+        mCircleView = createCircleView(mStartPoint, DEFAULT_RADIUS);
+        addView(mCircleView);
+        addView(createCircleView(mEndPoint, DEFAULT_RADIUS));
+
+        mAnimator = ObjectAnimator.ofObject(this, "centerPoint",
+                new PathEvaluator(), mPath.getPoints().toArray());
+        mAnimator.setDuration(1000);
+
+        final float radius = mCircleView.getRadius();
+        ObjectAnimator radiusDecreaseAnim = ObjectAnimator.ofFloat(mCircleView, "radius", radius - 20);
+        radiusDecreaseAnim.setDuration(500);
+        ObjectAnimator radiusIncreaseAnim = ObjectAnimator.ofFloat(mCircleView, "radius", radius);
+        radiusIncreaseAnim.setDuration(500);
+
+        AnimatorSet radiusAnim = new AnimatorSet();
+        radiusAnim.playSequentially(radiusDecreaseAnim, radiusIncreaseAnim);
+        //radiusAnim.setDuration(1000);
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.playTogether(radiusAnim, mAnimator);
     }
 
     private CircleView createCircleView(PointF centerPoint, float radius) {
@@ -50,10 +78,20 @@ public class CirclePathMotionView extends FrameLayout {
         CircleView circleView = new CircleView(getContext());
         circleView.setLayoutParams(params);
         circleView.setCenterPoint(centerPoint);
-        circleView.setRadius(mRadius);
+        circleView.setRadius(radius);
 
         return circleView;
     }
 
-    
+    public void setLoc(PathPoint point) {
+        mCircleView.setCenterPoint(new PointF(point.mX, point.mY));
+    }
+
+    public void startAnimating() {
+        if (mAnimatorSet.isRunning()) {
+            mAnimatorSet.end();
+        }
+
+        mAnimatorSet.start();
+    }
 }

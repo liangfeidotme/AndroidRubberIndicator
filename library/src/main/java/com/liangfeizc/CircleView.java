@@ -1,5 +1,6 @@
 package com.liangfeizc;
 
+import android.animation.PointFEvaluator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ public class CircleView extends View {
     private float mRadius;
     private Paint mPaint;
     private PointF mCenterPoint;
+
 
     public CircleView(Context context) {
         this(context, null);
@@ -45,14 +47,16 @@ public class CircleView extends View {
         mPaint.setColor(mColor);
         mPaint.setStrokeWidth(1);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        mCenterPoint = new PointF();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        //mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
-        //mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
+        mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
+        mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
     }
 
     @Override
@@ -82,5 +86,19 @@ public class CircleView extends View {
 
     public PointF getCenterPoint() {
         return mCenterPoint;
+    }
+
+    public void setCenterPoint(PathPoint point) {
+        mCenterPoint.x = point.mX;
+        mCenterPoint.y = point.mY;
+    }
+
+    public void setLocation(PathPoint location) {
+        setX(location.mX - mRadius);
+        setY(location.mY - mRadius);
+    }
+
+    public PointF getLocation() {
+        return new PointF(getX() + mRadius, getY() + mRadius);
     }
 }

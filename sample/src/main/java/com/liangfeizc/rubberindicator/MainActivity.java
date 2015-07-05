@@ -10,14 +10,17 @@ import com.liangfeizc.RubberIndicator;
 
 public class MainActivity extends AppCompatActivity {
     private RubberIndicator mRubberIndicator;
-
+    private CirclePathMotionView mMotionView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new CirclePathMotionView(this));
-        //setContentView(R.layout.activity_main);
-        //mRubberIndicator = (RubberIndicator) findViewById(R.id.rubber);
-        //mRubberIndicator.setCount(8);
+
+        //mMotionView = new CirclePathMotionView(this);
+        //setContentView(mMotionView);
+
+        setContentView(R.layout.activity_main);
+        mRubberIndicator = (RubberIndicator) findViewById(R.id.rubber);
+        mRubberIndicator.setCount(8);
     }
 
     @Override
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveCircle() {
+        //mMotionView.startAnimating();
         mRubberIndicator.next();
     }
 }

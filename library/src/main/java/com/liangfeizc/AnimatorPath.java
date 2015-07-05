@@ -4,6 +4,8 @@ package com.liangfeizc;
  * Created by liangfeizc on 7/5/15.
  */
 
+import android.graphics.RectF;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -44,6 +46,10 @@ public class AnimatorPath {
      */
     public void curveTo(float c0X, float c0Y, float c1X, float c1Y, float x, float y) {
         mPoints.add(PathPoint.curveTo(c0X, c0Y, c1X, c1Y, x, y));
+    }
+
+    public void arcTo(RectF oval, float startAngle, float sweepAngle) {
+        mPoints.add(PathPoint.arcTo(oval, startAngle, sweepAngle));
     }
 
     /**

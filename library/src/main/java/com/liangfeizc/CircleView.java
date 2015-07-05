@@ -1,6 +1,5 @@
 package com.liangfeizc;
 
-import android.animation.PointFEvaluator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,9 +16,10 @@ public class CircleView extends View {
     private static final int DEFAULT_COLOR = Color.BLACK;
 
     private int mColor;
-    private float mRadius;
     private Paint mPaint;
-    private PointF mCenterPoint;
+    private float mRadius;
+    private float mCenterX;
+    private float mCenterY;
 
 
     public CircleView(Context context) {
@@ -47,22 +47,21 @@ public class CircleView extends View {
         mPaint.setColor(mColor);
         mPaint.setStrokeWidth(1);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        mCenterPoint = new PointF();
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-
-        mCenterPoint.set((right - left) / 2.0f, (bottom - top) / 2.0f);
-        mRadius = Math.min(mCenterPoint.x, mCenterPoint.y);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius, mPaint);
+        canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        mCenterX = (right - left) / 2;
+        mCenterY = (bottom - top) / 2;
+
+        mRadius = Math.min(mCenterX, mCenterY);
     }
 
     public void setColor(final int colorValue) {
@@ -70,35 +69,21 @@ public class CircleView extends View {
         invalidate();
     }
 
-    public void setRadius(float radius) {
-        mRadius = radius;
-        invalidate();
+    public PointF getCenter() {
+        return new PointF(getX() + getWidth() / 2, getY() + getHeight() / 2);
     }
 
-    public void setCenterPoint(PointF point) {
-        mCenterPoint = point;
+    public void setCenter(final PointF center) {
+        setX(center.x - getWidth() / 2);
+        setY(center.y - getHeight() / 2);
+    }
+
+    public void setRadius(final float radius) {
+        mRadius = radius;
         invalidate();
     }
 
     public float getRadius() {
         return mRadius;
-    }
-
-    public PointF getCenterPoint() {
-        return mCenterPoint;
-    }
-
-    public void setCenterPoint(PathPoint point) {
-        mCenterPoint.x = point.mX;
-        mCenterPoint.y = point.mY;
-    }
-
-    public void setLocation(PathPoint location) {
-        setX(location.mX - mRadius);
-        setY(location.mY - mRadius);
-    }
-
-    public PathPoint getLocation() {
-        return new PathPoint(PathPoint.LINE, getX() + mRadius, getY() + mRadius);
     }
 }

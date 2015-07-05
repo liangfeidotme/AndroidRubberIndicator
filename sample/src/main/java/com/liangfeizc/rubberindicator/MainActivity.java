@@ -5,12 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.liangfeizc.CirclePathMotionView;
 import com.liangfeizc.RubberIndicator;
 
 public class MainActivity extends AppCompatActivity {
     private RubberIndicator mRubberIndicator;
-    private CirclePathMotionView mMotionView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveCircle() {
         //mMotionView.startAnimating();
-        mRubberIndicator.next();
+        mRubberIndicator.pageUp();
     }
 }

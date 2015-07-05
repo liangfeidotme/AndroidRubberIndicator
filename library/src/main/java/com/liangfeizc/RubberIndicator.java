@@ -3,14 +3,15 @@ package com.liangfeizc;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -39,12 +40,7 @@ public class RubberIndicator extends LinearLayout {
 
     public RubberIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttrs(attrs);
         init();
-    }
-
-    private void initAttrs(AttributeSet attrs) {
-
     }
 
     private void init() {
@@ -55,78 +51,51 @@ public class RubberIndicator extends LinearLayout {
         mOuterCircle = (CircleView) rootView.findViewById(R.id.outer_circle);
 
         mAnim = new AnimatorSet();
-
     }
 
     public void setCount(int count) {
         mCount = count;
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public void next() {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void pageUp() {
         float smallCircleX = mLargeCircle.getX();
         float largeCircleX = mSmallCircle.getX() + mSmallCircle.getWidth() - mLargeCircle.getWidth();
         float outerCircleX = mOuterCircle.getX() + largeCircleX - mLargeCircle.getX();
 
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        //    mSmallCircle.animate().x(smallCircleX).start();
-        //    mLargeCircle.animate().x(largeCircleX).start();
-        //    mOuterCircle.animate().x(outerCircleX).start();
-        //} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            animate(smallCircleX, largeCircleX, outerCircleX);
-        //}
+        float radius = mLargeCircle.getRadius();
+        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("x", largeCircleX);
+        PropertyValuesHolder pvhRadius = PropertyValuesHolder.ofFloat("radius", radius, radius - 10, radius);
+        ObjectAnimator largeCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mLargeCircle, pvhX, pvhRadius);
+
+        radius = mOuterCircle.getRadius();
+        pvhX = PropertyValuesHolder.ofFloat("x", outerCircleX);
+        pvhRadius = PropertyValuesHolder.ofFloat("radius", radius, radius - 10, radius);
+        ObjectAnimator outerCircleAnim = ObjectAnimator.ofPropertyValuesHolder(mOuterCircle, pvhX, pvhRadius);
+
+
+        PointF smallCircleCenter = mSmallCircle.getCenter();
+        PointF smallCircleEndCenter = new PointF(
+                smallCircleCenter.x - (mSmallCircle.getX() - smallCircleX), smallCircleCenter.y);
+        radius = (smallCircleCenter.x - smallCircleEndCenter.x) / 2;
+        RectF oval = new RectF(smallCircleEndCenter.x, smallCircleEndCenter.y - radius,
+                smallCircleCenter.x, smallCircleEndCenter.y + radius);
+        Path motionPath = new Path();
+        motionPath.arcTo(oval, 0, 180);
+        ObjectAnimator smallCircleAnim = ObjectAnimator.ofObject(mSmallCircle, "center", null, motionPath);
+
+        PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofFloat("rotation", 0, -30f, 0, 30f, 0);
+        PropertyValuesHolder pvhScale = PropertyValuesHolder.ofFloat("scaleY", 1, 0.5f, 1);
+        ObjectAnimator otherAnim = ObjectAnimator.ofPropertyValuesHolder(mSmallCircle, pvhRotation, pvhScale);
+
+
+        mAnim.play(smallCircleAnim).with(otherAnim)
+                .with(largeCircleAnim).with(outerCircleAnim);
+        mAnim.setDuration(1000);
+        mAnim.start();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void animate(float smallCircleX, float largeCircleX, float outerCircleX) {
+    public void pageDown() {
 
-        /** radius animator */
-        float radius = mSmallCircle.getRadius();
-        ObjectAnimator radiusDecreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius - 5);
-        ObjectAnimator radiusIncreaseAnim = ObjectAnimator.ofFloat(mSmallCircle, "radius", radius);
-
-        radiusDecreaseAnim.setDuration(1500);
-        radiusIncreaseAnim.setDuration(1500);
-
-        AnimatorSet radiusAnim = new AnimatorSet();
-        radiusAnim.playSequentially(radiusDecreaseAnim, radiusIncreaseAnim);
-        radiusAnim.setDuration(3000);
-
-        /** line motion */
-        ObjectAnimator smallCircleAnim = ObjectAnimator.ofFloat(mSmallCircle, "x", smallCircleX);
-        ObjectAnimator largeCircleAnim = ObjectAnimator.ofFloat(mLargeCircle, "x", largeCircleX);
-        ObjectAnimator outerCircleAnim = ObjectAnimator.ofFloat(mOuterCircle, "x", outerCircleX);
-
-        smallCircleAnim.setDuration(3000);
-        largeCircleAnim.setDuration(3000);
-        outerCircleAnim.setDuration(3000);
-
-        /** arc motion **/
-        PathPoint pathPoint = mSmallCircle.getLocation();
-
-        PointF startLocation = new PointF(pathPoint.mX, pathPoint.mY);
-        PointF endLocation = new PointF(startLocation.x - (mSmallCircle.getX() - smallCircleX), startLocation.y);
-
-        Animator  arcAnim = createArcMotion(startLocation, endLocation);
-        arcAnim.setDuration(3000);
-
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.setInterpolator(new BounceInterpolator());
-        animSet.playTogether(smallCircleAnim, largeCircleAnim, outerCircleAnim, radiusAnim, arcAnim);
-        animSet.start();
-    }
-
-    public Animator createArcMotion(PointF startPoint, PointF endPoint) {
-        AnimatorPath path = new AnimatorPath();
-
-        float distance = (startPoint.x - endPoint.x) / 2;
-        RectF oval = new RectF(endPoint.x, endPoint.y - distance, startPoint.x, startPoint.y + distance);
-
-        path.arcTo(oval, 0, 180);
-
-        ObjectAnimator anim = ObjectAnimator.ofObject(mSmallCircle, "location",
-                new PathEvaluator(), path.getPoints().toArray());
-
-        return anim;
     }
 }

@@ -13,14 +13,16 @@
         android:layout_gravity="center"
         app:cv_color="@color/background" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/container_wrapper"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:layout_gravity="center"
         android:background="@drawable/indicator_background" />
 
     <LinearLayout
+        android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"

@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">library</string>
-    <color name="background">#FF533456</color>
-    <color name="smallCircle">#FFDF8D81</color>
-    <color name="largeCircle">#FFAF3854</color>
 </resources>

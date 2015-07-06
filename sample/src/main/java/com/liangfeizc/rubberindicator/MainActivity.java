@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         mRubberIndicator = (RubberIndicator) findViewById(R.id.rubber);
-        mRubberIndicator.setCount(8);
+        mRubberIndicator.setCount(5);
     }
 
     @Override

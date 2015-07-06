@@ -2,75 +2,29 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <com.liangfeizc.CircleView
         android:id="@+id/outer_circle"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        app:cv_color="@color/background" />
+        app:cv_color="@color/outerCircleColor" />
 
     <View
         android:id="@+id/container_wrapper"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
         android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:background="@drawable/indicator_background" />
 
     <LinearLayout
         android:id="@+id/container"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.liangfeizc.CircleView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-
-        <com.liangfeizc.CircleView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-
-        <com.liangfeizc.CircleView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-
-        <com.liangfeizc.CircleView
-            android:id="@+id/large_circle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/largeCircle" />
-
-        <com.liangfeizc.CircleView
-            android:id="@+id/small_circle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-
-        <com.liangfeizc.CircleView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-
-        <com.liangfeizc.CircleView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:cv_color="@color/smallCircle" />
-    </LinearLayout>
+        android:orientation="horizontal" />
 </FrameLayout>

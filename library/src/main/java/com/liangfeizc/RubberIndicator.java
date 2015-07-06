@@ -10,52 +10,54 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by liangfeizc on 6/28/15.
  */
 public class RubberIndicator extends FrameLayout {
-    private static final int OUTER_CIRCLE_COLOR = 0xFF533456;
     private static final int SMALL_CIRCLE_COLOR = 0xFFDF8D81;
     private static final int LARGE_CIRCLE_COLOR = 0xFFAF3854;
+    private static final int OUTER_CIRCLE_COLOR = 0xFF533456;
 
     private static final int SMALL_CIRCLE_MARGIN = 20;
-    private static final int SMALL_CIRCLE_RADIUS = 30;
-    private static final int LARGE_CIRCLE_RADIUS = 50;
-    private static final int OUTER_CIRCLE_RADIUS = 100;
+    private static final int SMALL_CIRCLE_RADIUS = 20;
+    private static final int LARGE_CIRCLE_RADIUS = 25;
+    private static final int OUTER_CIRCLE_RADIUS = 50;
 
     private static final int CIRCLE_TYPE_SMALL = 0x00;
     private static final int CIRCLE_TYPE_LARGE = 0x01;
     private static final int CIRCLE_TYPE_OUTER = 0x02;
 
-    private int mSmallCircleColor = SMALL_CIRCLE_COLOR;
-    private int mLargeCircleColor = LARGE_CIRCLE_COLOR;
-    private int mOuterCircleColor = OUTER_CIRCLE_COLOR;
+    /** colors */
+    private int mSmallCircleColor;
+    private int mLargeCircleColor;
+    private int mOuterCircleColor;
 
-    private int mSmallCircleMargin;
+    /** coordinate values */
+    private int mCircleMargin;
     private int mSmallCircleRadius;
     private int mLargeCircleRadius;
     private int mOuterCircleRadius;
 
-    private List<CircleView> mCircleViewList;
-    private int mCount;
-
+    /** views */
+    private View mContainerWrapper;
+    private LinearLayout mContainer;
     private CircleView mLargeCircle;
     private CircleView mSmallCircle;
     private CircleView mOuterCircle;
+    private List<CircleView> mCircleViewList;
 
-    private LinearLayout mContainer;
-    private View mContainerWrapper;
-
+    /** animations */
     private AnimatorSet mAnim;
-
     private PropertyValuesHolder pvhScaleX;
     private PropertyValuesHolder pvhScaleY;
     private PropertyValuesHolder pvhRotation;
@@ -75,34 +77,46 @@ public class RubberIndicator extends FrameLayout {
         View rootView = inflate(getContext(), R.layout.rubber_indicator, this);
         mContainer = (LinearLayout) rootView.findViewById(R.id.container);
         mContainerWrapper = rootView.findViewById(R.id.container_wrapper);
-
-        mLargeCircle = (CircleView) rootView.findViewById(R.id.large_circle);
-        mSmallCircle = (CircleView) rootView.findViewById(R.id.small_circle);
         mOuterCircle = (CircleView) rootView.findViewById(R.id.outer_circle);
 
         /** values */
-        mSmallCircleMargin = dp2px(SMALL_CIRCLE_MARGIN);
+        mSmallCircleColor = SMALL_CIRCLE_COLOR;
+        mLargeCircleColor = LARGE_CIRCLE_COLOR;
+        mOuterCircleColor = OUTER_CIRCLE_COLOR;
+
+        mCircleViewList = new ArrayList<>();
+        mCircleMargin = dp2px(SMALL_CIRCLE_MARGIN);
         mSmallCircleRadius = dp2px(SMALL_CIRCLE_RADIUS);
         mLargeCircleRadius = dp2px(LARGE_CIRCLE_RADIUS);
         mOuterCircleRadius = dp2px(OUTER_CIRCLE_RADIUS);
 
         mAnim = new AnimatorSet();
-
         pvhScaleX = PropertyValuesHolder.ofFloat("scaleX", 1, 0.8f, 1);
         pvhScaleY = PropertyValuesHolder.ofFloat("scaleY", 1, 0.8f, 1);
         pvhRotation = PropertyValuesHolder.ofFloat("rotation", 0, -30f, 0, 30f, 0);
         pvhScale = PropertyValuesHolder.ofFloat("scaleY", 1, 0.5f, 1);
-
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        mContainerWrapper.setMinimumWidth(mContainer.getWidth());
     }
 
     public void setCount(int count) {
-        mCount = count;
+        if (count < 2) {
+            throw new IllegalArgumentException("count must be greater than 2");
+        }
+
+        mLargeCircle = createCircleView(CIRCLE_TYPE_LARGE);
+        mContainer.addView(createCircleView(CIRCLE_TYPE_LARGE));
+        mCircleViewList.add(mLargeCircle);
+        count = count - 1;
+        for (int i = 0; i < count; i++) {
+            CircleView circleView = createCircleView(CIRCLE_TYPE_SMALL);
+            mContainer.addView(circleView);
+            mCircleViewList.add(circleView);
+        }
+        mSmallCircle = mCircleViewList.get(1);
     }
 
     private CircleView createCircleView(int type) {
@@ -110,22 +124,25 @@ public class RubberIndicator extends FrameLayout {
 
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(mSmallCircleMargin, mSmallCircleMargin, mSmallCircleMargin, mSmallCircleMargin);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        params.setMargins(mCircleMargin, mCircleMargin, mCircleMargin, mCircleMargin);
 
         switch (type) {
             case CIRCLE_TYPE_SMALL:
-                params.width = mSmallCircleRadius;
+                params.height = params.width = mSmallCircleRadius << 1;
                 circleView.setColor(mSmallCircleColor);
                 break;
             case CIRCLE_TYPE_LARGE:
-                params.width = mLargeCircleRadius;
+                params.height = params.width = mLargeCircleRadius << 1;
                 circleView.setColor(mLargeCircleColor);
                 break;
             case CIRCLE_TYPE_OUTER:
-                params.width = mOuterCircleRadius;
+                params.height = params.width = mOuterCircleRadius << 1;
                 circleView.setColor(mOuterCircleColor);
                 break;
         }
+
+        circleView.setLayoutParams(params);
 
         return circleView;
     }

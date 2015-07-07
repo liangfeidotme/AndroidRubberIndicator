@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.liangfeizc.RubberIndicator;
 
@@ -30,17 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_move: {
-                moveCircle();
-                break;
-            }
-        }
         return super.onOptionsItemSelected(item);
     }
 
-    private void moveCircle() {
-        //mMotionView.startAnimating();
+    public void moveIndicator(View view) {
         mRubberIndicator.move();
     }
 }

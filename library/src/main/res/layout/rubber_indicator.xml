@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.liangfeizc.CircleView
         android:id="@+id/outer_circle"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_centerVertical="true"
         app:cv_color="@color/outerCircleColor" />
 
@@ -32,4 +29,4 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal" />
-</RelativeLayout>
+</merge>

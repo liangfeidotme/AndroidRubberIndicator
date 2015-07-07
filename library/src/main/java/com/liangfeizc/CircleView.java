@@ -73,8 +73,12 @@ public class CircleView extends View {
     }
 
     public void setCenter(final PointF center) {
-        setX(center.x - getWidth() / 2);
-        setY(center.y - getHeight() / 2);
+        setCenter(center.x, center.y);
+    }
+
+    public void setCenter(float cx, float cy) {
+        setX(cx - getWidth() / 2);
+        setY(cy - getHeight() / 2);
     }
 
     public void setRadius(final float radius) {

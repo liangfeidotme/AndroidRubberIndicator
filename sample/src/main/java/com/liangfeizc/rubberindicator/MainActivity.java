@@ -41,6 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveCircle() {
         //mMotionView.startAnimating();
-        mRubberIndicator.pageUp();
+        mRubberIndicator.move();
     }
 }

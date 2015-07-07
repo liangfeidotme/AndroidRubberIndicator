@@ -21,7 +21,6 @@ public class CircleView extends View {
     private float mCenterX;
     private float mCenterY;
 
-
     public CircleView(Context context) {
         this(context, null);
     }

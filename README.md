@@ -1,4 +1,4 @@
-# RubberIndicator [Developing]
+# RubberIndicator
 
 A rubber indicator for ViewPager
 
@@ -7,12 +7,12 @@ A rubber indicator for ViewPager
 * Designed by [Valentyn Khenkin](https://dribbble.com/shots/2090803-Rubber-Indicator?list=searches&tag=indicator&offset=7)
 * [Here](http://codepen.io/machycek/full/eNvyjb/) is the CSS version
 
-# Me
+## Me
 
 * [weibo](http://weibo.com/liangfeizc)
-* [twitter](https://twitter.com/liangfeizc)
+* [twitter](https://twitter.com/JpRyouhi)
 
-# License
+## License
 
 ```
 MIT

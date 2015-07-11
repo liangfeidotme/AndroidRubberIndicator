@@ -121,14 +121,7 @@ public class RubberIndicator extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-
         mOuterCircle.setCenter(mLargeCircle.getCenter());
-    }
-
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     public void setCount(int count) {
@@ -228,22 +221,12 @@ public class RubberIndicator extends RelativeLayout {
             });
         }
 
-        //PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofFloat("rotation", 0,
-        //        mDown ? -30f : 30f, 0, mDown ? 30f : -30f, 0);
-
         mPvhRotation.setFloatValues(0, mDown ? -30f : 30f, 0, mDown ? 30f : -30f, 0);
         ObjectAnimator otherAnim = ObjectAnimator.ofPropertyValuesHolder(mSmallCircle, mPvhRotation, mPvhScale);
 
-
-        //float y = mSmallCircle.getY();
-        //PropertyValuesHolder pvhShake = PropertyValuesHolder.ofFloat("y", y, y - 10, y);
-        //ObjectAnimator shakeAnim = ObjectAnimator.ofPropertyValuesHolder(mSmallCircle, pvhShake);
-        //shakeAnim.setInterpolator(new BounceInterpolator());
-        //shakeAnim.setDuration(20);
-
         mAnim = new AnimatorSet();
         mAnim.play(smallCircleAnim)
-                .with(otherAnim).with(largeCircleAnim).with(outerCircleAnim)/*.before(shakeAnim)*/;
+                .with(otherAnim).with(largeCircleAnim).with(outerCircleAnim);
         mAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         mAnim.setDuration(500);
         mAnim.addListener(new Animator.AnimatorListener() {

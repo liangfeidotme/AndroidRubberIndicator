@@ -21,6 +21,9 @@ import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by liangfeizc on 6/28/15.
  */
@@ -62,7 +65,7 @@ public class RubberIndicator extends RelativeLayout {
     private CircleView mLargeCircle;
     private CircleView mSmallCircle;
     private CircleView mOuterCircle;
-    private CircleView[] mSmallCircles;
+    private List<CircleView> mCircleViews;
 
     /**
      * animations
@@ -79,11 +82,15 @@ public class RubberIndicator extends RelativeLayout {
     private Path mSmallCirclePath;
 
     /**
+     * Indicator movement listener
+     */
+    private OnMoveListener mOnMoveListener;
+
+    /**
      * Helper values
      */
-    private int mSmallCircleIndex = 0;
+    private int mFocusPosition = -1;
     private int mBezierCurveAnchorDistance = dp2px(BEZIER_CURVE_ANCHOR_DISTANCE);
-    private boolean mDown = true;
 
     public RubberIndicator(Context context) {
         super(context);
@@ -110,36 +117,90 @@ public class RubberIndicator extends RelativeLayout {
         mLargeCircleRadius = dp2px(LARGE_CIRCLE_RADIUS);
         mOuterCircleRadius = dp2px(OUTER_CIRCLE_RADIUS);
 
+        /** animators */
         mPvhScaleX = PropertyValuesHolder.ofFloat("scaleX", 1, 0.8f, 1);
         mPvhScaleY = PropertyValuesHolder.ofFloat("scaleY", 1, 0.8f, 1);
         mPvhScale = PropertyValuesHolder.ofFloat("scaleY", 1, 0.5f, 1);
         mPvhRotation = PropertyValuesHolder.ofFloat("rotation", 0);
 
         mSmallCirclePath = new Path();
+
+        /** circle view list */
+        mCircleViews = new ArrayList<>();
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+
         mOuterCircle.setCenter(mLargeCircle.getCenter());
     }
 
     public void setCount(int count) {
+        if (mFocusPosition == -1) {
+            mFocusPosition = 0;
+        }
+        setCount(count, mFocusPosition);
+    }
+
+    /**
+     * This method must be called before {@link #setCount(int)}, otherwise the focus position will
+     * be set to the default value - zero.
+     * @param pos the focus position
+     */
+    public void setFocusPosition(final int pos) {
+        mFocusPosition = pos;
+    }
+
+    public void setCount(int count, int focusPos) {
         if (count < 2) {
             throw new IllegalArgumentException("count must be greater than 2");
         }
 
-        // create the large circle
-        mLargeCircle = createCircleView(CIRCLE_TYPE_LARGE);
-        mContainer.addView(mLargeCircle);
-
-        int size = count - 1;
-        mSmallCircles = new CircleView[size];
-        for (int i = 0; i < size; i++) {
-            CircleView circleView = createCircleView(CIRCLE_TYPE_SMALL);
-            mContainer.addView(circleView);
-            mSmallCircles[i] = circleView;
+        if (focusPos >= count) {
+            throw new IllegalArgumentException("focus position must be less than count");
         }
+
+        int i = 0;
+        for (; i < focusPos; i++) {
+            addSmallCircle();
+        }
+        addLargeCircle();
+        for (i = focusPos + 1; i < count; i++) {
+            addSmallCircle();
+        }
+
+        mFocusPosition = focusPos;
+    }
+
+    public int getFocusPosition() {
+        return mFocusPosition;
+    }
+
+    public void moveToLeft() {
+        if (mAnim != null && mAnim.isRunning()) return;
+        move(false);
+    }
+
+    public void moveToRight() {
+        if (mAnim != null && mAnim.isRunning()) return;
+        move(true);
+    }
+
+    public void setOnMoveListener(final OnMoveListener moveListener) {
+        mOnMoveListener = moveListener;
+    }
+
+    private void addSmallCircle() {
+        CircleView smallCircle = createCircleView(CIRCLE_TYPE_SMALL);
+        mCircleViews.add(smallCircle);
+        mContainer.addView(smallCircle);
+    }
+
+    private void addLargeCircle() {
+        mLargeCircle = createCircleView(CIRCLE_TYPE_LARGE);
+        mCircleViews.add(mLargeCircle);
+        mContainer.addView(mLargeCircle);
     }
 
     private CircleView createCircleView(int type) {
@@ -170,14 +231,29 @@ public class RubberIndicator extends RelativeLayout {
         return circleView;
     }
 
+    private int getNextPosition(boolean toRight) {
+        int nextPos = mFocusPosition + (toRight ? 1 : -1);
+        if (nextPos < 0 || nextPos >= mCircleViews.size()) return -1;
+        return nextPos;
+    }
+
+    private void swapCircles(int currentPos, int nextPos) {
+        CircleView circleView = mCircleViews.get(currentPos);
+        mCircleViews.set(currentPos, mCircleViews.get(nextPos));
+        mCircleViews.set(nextPos, circleView);
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void move(final boolean down) {
-        mSmallCircle = mSmallCircles[mSmallCircleIndex];
+    private void move(final boolean toRight) {
+        final int nextPos = getNextPosition(toRight);
+        if (nextPos == -1) return;
+
+        mSmallCircle = mCircleViews.get(nextPos);
 
         // Calculate the new x coordinate for circles.
-        float smallCircleX = down ? mLargeCircle.getX()
+        float smallCircleX = toRight ? mLargeCircle.getX()
                 : mLargeCircle.getX() + mLargeCircle.getWidth() - mSmallCircle.getWidth();
-        float largeCircleX = down ?
+        float largeCircleX = toRight ?
                 mSmallCircle.getX() + mSmallCircle.getWidth() - mLargeCircle.getWidth() : mSmallCircle.getX();
         float outerCircleX = mOuterCircle.getX() + largeCircleX - mLargeCircle.getX();
 
@@ -221,7 +297,7 @@ public class RubberIndicator extends RelativeLayout {
             });
         }
 
-        mPvhRotation.setFloatValues(0, mDown ? -30f : 30f, 0, mDown ? 30f : -30f, 0);
+        mPvhRotation.setFloatValues(0, toRight ? -30f : 30f, 0, toRight ? 30f : -30f, 0);
         ObjectAnimator otherAnim = ObjectAnimator.ofPropertyValuesHolder(mSmallCircle, mPvhRotation, mPvhScale);
 
         mAnim = new AnimatorSet();
@@ -231,34 +307,29 @@ public class RubberIndicator extends RelativeLayout {
         mAnim.setDuration(500);
         mAnim.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
+            public void onAnimationStart(Animator animation) { }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                //mSmallCircle.setX(Math.round(mSmallCircle.getX() + 0.5));
-                //mSmallCircle.setY(Math.round(mSmallCircle.getY() + 0.5));
+                swapCircles(mFocusPosition, nextPos);
+                mFocusPosition = nextPos;
 
-                if (mDown && mSmallCircleIndex == mSmallCircles.length - 1) {
-                    mDown = false;
-                } else if (!mDown && mSmallCircleIndex == 0) {
-                    mDown = true;
-                } else {
-                    mSmallCircleIndex = mSmallCircleIndex + (mDown ? 1 : -1);
+                if (mOnMoveListener != null) {
+                    if (toRight) {
+                        mOnMoveListener.onMovedToRight();
+                    } else {
+                        mOnMoveListener.onMovedToLeft();
+                    }
                 }
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
+            public void onAnimationCancel(Animator animation) { }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
+            public void onAnimationRepeat(Animator animation) { }
         });
+
         mAnim.start();
     }
 
@@ -266,10 +337,8 @@ public class RubberIndicator extends RelativeLayout {
         return (int) getContext().getResources().getDisplayMetrics().density * dpValue;
     }
 
-    public void move() {
-        if (mAnim != null && mAnim.isRunning()) {
-            return;
-        }
-        move(mDown);
+    public interface OnMoveListener {
+        public void onMovedToLeft();
+        public void onMovedToRight();
     }
 }

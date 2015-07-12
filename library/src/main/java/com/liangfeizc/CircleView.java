@@ -16,10 +16,11 @@ public class CircleView extends View {
     private static final int DEFAULT_COLOR = Color.BLACK;
 
     private int mColor;
-    private Paint mPaint;
     private float mRadius;
     private float mCenterX;
     private float mCenterY;
+
+    private Paint mPaint;
 
     public CircleView(Context context) {
         this(context, null);

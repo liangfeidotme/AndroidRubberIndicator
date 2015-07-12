@@ -3,17 +3,33 @@
     android:layout_height="match_parent">
 
     <Button
-        android:text="Come on!"
-        android:onClick="moveIndicator"
-        android:layout_gravity="bottom|center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:onClick="moveToLeft"
+        android:text="@string/action_move_to_left" />
+
+    <TextView
+        android:id="@+id/focus_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:textColor="#ed2727" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:onClick="moveToRight"
+        android:text="@string/action_move_to_right" />
+
     <com.liangfeizc.RubberIndicator
         android:id="@+id/rubber"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp" />
 
 </FrameLayout>
 

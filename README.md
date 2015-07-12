@@ -9,6 +9,8 @@ A rubber indicator for ViewPager
 
 ## Usage
 
+### Introduction
+
 APIs offered by **RubberIndicator**.
 
 |APIs | Usage|
@@ -20,7 +22,7 @@ APIs offered by **RubberIndicator**.
 |moveToLeft()|Move the focusing indicator to left|
 |moveToRight()|Move the focusing indicator to right|
 
-In addition to the APIs listed in the table, **RubberIndicator** also provides a callback listener - **OnMoveListener**, because the user should be notified when the moving animator finished.
+In addition to the APIs listed in the table, **RubberIndicator** also provides a callback listener - **OnMoveListener** for the user should be notified when the moving animator finished.
 
 ```java
 public interface OnMoveListener {
@@ -28,6 +30,18 @@ public interface OnMoveListener {
 	void onMovedToRight();
 }
 ```
+
+### How to use
+
+checkout to [sample](sample/src/main/java/com/liangfeizc/rubberindicator/MainActivity.java) to see how to use `RubberIndicator` with a `GestureDetector`.
+
+### Attributes
+
+> comming soon
+
+### package
+
+> coming soon
 
 ## Me
 

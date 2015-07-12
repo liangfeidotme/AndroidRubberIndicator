@@ -338,7 +338,7 @@ public class RubberIndicator extends RelativeLayout {
     }
 
     public interface OnMoveListener {
-        public void onMovedToLeft();
-        public void onMovedToRight();
+        void onMovedToLeft();
+        void onMovedToRight();
     }
 }

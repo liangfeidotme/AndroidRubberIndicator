@@ -6,8 +6,7 @@
         android:id="@+id/outer_circle"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:layout_centerVertical="true"
-        app:cv_color="@color/outerCircleColor" />
+        android:layout_centerVertical="true"/>
 
     <View
         android:id="@+id/container_wrapper"

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -75,6 +76,8 @@ public class RubberIndicator extends RelativeLayout {
     private PropertyValuesHolder mPvhScaleY;
     private PropertyValuesHolder mPvhScale;
     private PropertyValuesHolder mPvhRotation;
+
+    private LinkedList<Boolean> mPendingAnimations;
 
     /**
      * Movement Path
@@ -145,6 +148,8 @@ public class RubberIndicator extends RelativeLayout {
 
         mSmallCirclePath = new Path();
 
+        mPendingAnimations = new LinkedList<>();
+
         /** circle view list */
         mCircleViews = new ArrayList<>();
     }
@@ -198,12 +203,18 @@ public class RubberIndicator extends RelativeLayout {
     }
 
     public void moveToLeft() {
-        if (mAnim != null && mAnim.isRunning()) return;
+        if (mAnim != null && mAnim.isRunning()){
+            mPendingAnimations.add(false);
+            return;
+        }
         move(false);
     }
 
     public void moveToRight() {
-        if (mAnim != null && mAnim.isRunning()) return;
+        if (mAnim != null && mAnim.isRunning()){
+            mPendingAnimations.add(true);
+            return;
+        }
         move(true);
     }
 
@@ -340,6 +351,10 @@ public class RubberIndicator extends RelativeLayout {
                     } else {
                         mOnMoveListener.onMovedToLeft();
                     }
+                }
+
+                if(!mPendingAnimations.isEmpty()){
+                    move(mPendingAnimations.removeFirst());
                 }
             }
 

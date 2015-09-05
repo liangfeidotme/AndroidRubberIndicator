@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RubberIndicator">
+        <attr name="smallCircleColor" format="color"/>
+        <attr name="largeCircleColor" format="color"/>
+        <attr name="outerCircleColor" format="color"/>
+    </declare-styleable>
+</resources>

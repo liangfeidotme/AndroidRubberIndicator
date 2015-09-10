@@ -158,7 +158,10 @@ public class RubberIndicator extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        mOuterCircle.setCenter(mLargeCircle.getCenter());
+        // Prevent crash if the count as not been set
+        if(mLargeCircle != null){
+            mOuterCircle.setCenter(mLargeCircle.getCenter());
+        }
     }
 
     public void setCount(int count) {

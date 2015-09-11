@@ -158,7 +158,10 @@ public class RubberIndicator extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        mOuterCircle.setCenter(mLargeCircle.getCenter());
+        // Prevent crash if the count as not been set
+        if(mLargeCircle != null){
+            mOuterCircle.setCenter(mLargeCircle.getCenter());
+        }
     }
 
     public void setCount(int count) {
@@ -186,13 +189,21 @@ public class RubberIndicator extends RelativeLayout {
             throw new IllegalArgumentException("focus position must be less than count");
         }
 
-        int i = 0;
-        for (; i < focusPos; i++) {
-            addSmallCircle();
-        }
-        addLargeCircle();
-        for (i = focusPos + 1; i < count; i++) {
-            addSmallCircle();
+        /* Check if the number on indicator has changed since the last setCount to prevent duplicate */
+        if(mCircleViews.size() != count) {
+            mContainer.removeAllViews();
+            mCircleViews.clear();
+
+            int i = 0;
+            for (; i < focusPos; i++) {
+                addSmallCircle();
+            }
+
+            addLargeCircle();
+
+            for (i = focusPos + 1; i < count; i++) {
+                addSmallCircle();
+            }
         }
 
         mFocusPosition = focusPos;

@@ -1,5 +1,7 @@
 # RubberIndicator
 
+[![Join the chat at https://gitter.im/LyndonChin/AndroidRubberIndicator](https://badges.gitter.im/LyndonChin/AndroidRubberIndicator.svg)](https://gitter.im/LyndonChin/AndroidRubberIndicator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A rubber indicator for ViewPager
 
 <img src="https://d13yacurqjgara.cloudfront.net/users/303234/screenshots/2090803/pageindicator.gif" width="400px" height="300px" />

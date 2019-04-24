@@ -1,8 +1,8 @@
 package com.liangfeizc.rubberindicator;
 
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.liangfeizc.RubberIndicator;
 
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity
     private static final String KEY_INDICATOR_ITEM_NUM = "indicator_item_num";
 
     // set the number of indicator items to 5
-    private int indicatorItemNum = 5;
+    private int indicatorItemNum = 7;
 
     private TextView mTextView;
     private RubberIndicator mRubberIndicator;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mRubberIndicator.setCount(savedInstanceState.getInt(KEY_INDICATOR_ITEM_NUM), savedInstanceState.getInt(KEY_INDICATOR_POSITION));
         } else {
-            mRubberIndicator.setCount(indicatorItemNum, 2);
+            mRubberIndicator.setCount(indicatorItemNum, 3);
         }
         
         //mRubberIndicator.setCount(5, 2);

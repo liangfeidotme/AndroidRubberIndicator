@@ -1,4 +1,4 @@
-package com.liangfeizc.rubberindicator;
+package me.liangfei.rubberindicator;
 
 import android.os.Bundle;
 import androidx.core.view.GestureDetectorCompat;
@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.liangfeizc.RubberIndicator;
+import me.liangfei.indicator.RubberIndicator;
 
 public class MainActivity extends AppCompatActivity
         implements RubberIndicator.OnMoveListener {

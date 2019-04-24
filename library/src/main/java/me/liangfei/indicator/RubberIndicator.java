@@ -1,4 +1,4 @@
-package com.liangfeizc;
+package me.liangfei.indicator;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

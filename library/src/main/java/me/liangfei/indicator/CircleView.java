@@ -1,4 +1,4 @@
-package com.liangfeizc;
+package me.liangfei.indicator;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,7 +12,7 @@ import android.view.View;
 /**
  * Created by liangfeizc on 6/26/15.
  */
-public class CircleView extends View {
+class CircleView extends View {
     private static final int DEFAULT_COLOR = Color.BLACK;
 
     private int mColor;

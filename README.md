@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/LyndonChin/AndroidRubberIndicator](https://badges.gitter.im/LyndonChin/AndroidRubberIndicator.svg)](https://gitter.im/LyndonChin/AndroidRubberIndicator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<img src="https://cdn.nlark.com/yuque/0/2019/png/124977/1559045910714-8948c8b2-2b86-44a3-a600-a4415db3c01f.png" size=400px />
+<img src="https://cdn.nlark.com/yuque/0/2019/png/124977/1559045910714-8948c8b2-2b86-44a3-a600-a4415db3c01f.png" width=400px />
 
 A rubber indicator for ViewPager
 
